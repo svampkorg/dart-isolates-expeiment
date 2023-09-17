@@ -18,7 +18,7 @@ extension ReceivePortExtension on ReceivePort {
         case String s:
           print(s);
         case T value:
-          stdout.write("\b*");
+          stdout.write("\b\b• ");
           whenResult?.call(value, killCommand);
         case KillWhen(:bool kill) when kill:
           close();
@@ -26,9 +26,8 @@ extension ReceivePortExtension on ReceivePort {
       }
     });
     if (whileListening case Function whileListening) {
-      IsolateRunner.run(whileListening, 100, bcStream, sendPort,
-          isolateName:
-              "Time line dot-printer '*' for a completed result. '[#min #s]' every half and minute, ':' & '|' every 5th & 10th sec.",
+      IsolateRunner.run(whileListening, 50, bcStream, sendPort,
+          isolateName: "Time line dot-printer '•' for a completed result. '[#m]' minute and half, '¡' & '|' every 5th & 10th sec.",
           withResult: false);
     }
   }

@@ -7,11 +7,11 @@ import 'package:isolates/isolate_runner.dart';
 import 'package:isolates/kill_message.dart';
 
 void main() async {
-  int fibb1 = 48;
-  int fibb2 = 49;
-  int fibb3 = 50;
-  int fibb4 = 51;
-  int fibb5 = 52;
+  int fibb1 = 47;
+  int fibb2 = 48;
+  int fibb3 = 49;
+  int fibb4 = 50;
+  int fibb5 = 51;
 
   List<Future<Map<String, int>>> fibbFutures;
 
@@ -35,13 +35,16 @@ void main() async {
 
   Map<String, int> resultMap = {};
 
+  stdout.write('\x1b[?25l'); // Hide cursor
   workerReceivePort.listenFor<Map<String, int>>(
       bcStream: bcFromIsolates,
       whileListening: progressPrint,
       whenKilled: () {
+        stdout.write("\b] ");
         print("\n\nResults are in!");
         printResult(resultMap);
         print("Press any key to exit");
+        stdout.write('\x1b[?25h'); // Show cursor
         stdin.first.then((value) => exit(0));
       },
       whenResult: (result, killCommand) {
