@@ -18,8 +18,8 @@ void progressPrint(int delay) {
     sleep(Duration(seconds: delay));
     elapsed++;
     String toPrint = switch (elapsed) {
-      int e when e == 0 => "${e}s",
-      int e when e % 10 == 0 => "${e}s",
+      int e when e == 0 => "[${e}s]",
+      int e when e % 10 == 0 => "[${e}s]",
       int e when e % 5 == 0 => ":",
       _ => ".",
     };

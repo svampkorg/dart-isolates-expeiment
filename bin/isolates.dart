@@ -7,10 +7,10 @@ import 'package:isolates/isolate_runner.dart';
 import 'package:isolates/kill_message.dart';
 
 void main() async {
-  int fibb1 = 20;
-  int fibb2 = 30;
-  int fibb3 = 40;
-  int fibb4 = 50;
+  int fibb1 = 48;
+  int fibb2 = 49;
+  int fibb3 = 50;
+  int fibb4 = 51;
 
   Map<String, int> resultMap = {};
 
@@ -36,13 +36,12 @@ void main() async {
       },
       whenResult: (result, killCommand) {
         resultMap.addAll(result);
-        stdout.write("¡");
+        stdout.write("(r${resultMap.length})");
         if (resultMap.length >= 4) {
+          print("\nResults are in!");
           resultMap.forEach((key, value) {
             print("$key: $value");
           });
-          print("Results: $resultMap");
-          print("apply killing");
           Function.apply(killCommand, [KillMessage(true)]);
         }
       });

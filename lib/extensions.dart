@@ -24,7 +24,8 @@ extension ReceivePortExtension on ReceivePort {
       }
     });
     if (whileListening case Function whileListening) {
-      IsolateRunner.run(whileListening, 1, bcStream, sendPort, isolateName: "dot-printer", withResult: false);
+      IsolateRunner.run(whileListening, 1, bcStream, sendPort,
+          isolateName: "dot-printer (r#) for registered result [#s] 10th second timestamp", withResult: false);
     }
   }
 }
