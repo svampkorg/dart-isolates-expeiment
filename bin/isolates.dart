@@ -46,7 +46,6 @@ void main() async {
       },
       whenResult: (result, killCommand) {
         resultMap.addAll(result);
-        stdout.write("(r${resultMap.length})");
         Function.apply(killCommand, [KillWhen(resultMap.length >= fibbFutures.length)]);
       });
 }

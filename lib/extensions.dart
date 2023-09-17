@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:isolates/isolate_runner.dart';
@@ -17,6 +18,7 @@ extension ReceivePortExtension on ReceivePort {
         case String s:
           print(s);
         case T value:
+          stdout.write("*");
           whenResult?.call(value, killCommand);
         case KillWhen(:bool kill) when kill:
           close();
