@@ -15,11 +15,11 @@ void main() async {
   int fibb6 = 53;
   int fibb7 = 54;
 
-  Map<String, int> resultMap = {};
   List<Future<Map<String, int>>> fibbFutures;
 
   ReceivePort workerReceivePort = ReceivePort();
 
+  // INFO: broadcast for multiple listeners
   var bcFromIsolates = workerReceivePort.asBroadcastStream();
 
   fibbFutures = [
@@ -39,6 +39,8 @@ void main() async {
     //     isolateName: "fibonacci calculation for $fibb7:th number"),
   ];
 
+  Map<String, int> resultMap = {};
+
   workerReceivePort.listenFor<Map<String, int>>(
       bcStream: bcFromIsolates,
       whileListening: progressPrint,
@@ -52,6 +54,6 @@ void main() async {
         // TODO: Match result type to expected type
         resultMap.addAll(result);
         stdout.write("(r${resultMap.length})");
-        Function.apply(killCommand, [KillMessage(resultMap.length >= fibbFutures.length)]);
+        Function.apply(killCommand, [KillWhen(resultMap.length >= fibbFutures.length)]);
       });
 }

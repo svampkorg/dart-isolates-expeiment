@@ -26,7 +26,7 @@ class IsolateRunner {
     if (killSignalStream case Stream bc) {
       bc.listen((message) {
         switch (message) {
-          case KillMessage(:bool kill) when kill:
+          case KillWhen(:bool kill) when kill:
             isolate.kill(priority: Isolate.immediate);
         }
       });

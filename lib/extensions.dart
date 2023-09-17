@@ -18,7 +18,7 @@ extension ReceivePortExtension on ReceivePort {
           print(s);
         case T value:
           whenResult?.call(value, killCommand);
-        case KillMessage(:bool kill) when kill:
+        case KillWhen(:bool kill) when kill:
           close();
           whenKilled?.call();
       }

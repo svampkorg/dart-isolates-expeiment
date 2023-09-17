@@ -1,5 +1,5 @@
-class KillMessage {
-  KillMessage(this.kill);
+class KillWhen {
+  KillWhen(this.kill);
   bool kill;
 }
 
