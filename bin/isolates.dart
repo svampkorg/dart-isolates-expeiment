@@ -52,9 +52,7 @@ fibbFutures = [
         stdout.write("(r${resultMap.length})");
         if (resultMap.length >= fibbFutures.length) {
           print("\n\nResults are in!");
-          resultMap.forEach((key, value) {
-            print("$key: $value");
-          });
+          printResult(result);
           Function.apply(killCommand, [KillMessage(true)]);
         }
       });

@@ -1,10 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-String getThisMessage(int i) {
-  return "You are currently calculating fibonacci sequence for $i";
-}
-
 void printResult(Map<String, int> result) {
   result.forEach((key, value) {
     print("$key: $value");
