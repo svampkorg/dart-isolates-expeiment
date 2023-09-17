@@ -38,7 +38,7 @@ void main() async {
         resultMap.addAll(result);
         stdout.write("(r${resultMap.length})");
         if (resultMap.length >= 4) {
-          print("\nResults are in!");
+          print("\n\nResults are in!");
           resultMap.forEach((key, value) {
             print("$key: $value");
           });

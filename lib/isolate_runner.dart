@@ -5,15 +5,16 @@ import 'package:isolates/kill_message.dart';
 
 class IsolateRunner {
   // INFO: This function takes an argument of T and expecting a return value of R
-  // for the given function and it's argument value
-  // static Future<R> run<T, R>(Function function, T arg, SendPort port) async {
+  // for the given function and it's argument value. It returns a map with the value of R
+  // and the name of the isolate completing the computation.
   static Future<Map<String, R>> run<T, R>(Function function, T arg, Stream? killSignalStream, SendPort resultListenerSendPort,
       {String? isolateName, bool withResult = true}) async {
-    // INFO: the completer for the future of the isolate spawn, with type R as the complete future
+    // INFO: the completer for the future of the isolate spawn
     final futureCompleter = Completer<Map<String, R>>();
 
     // INFO: The port receiving the messages from the isolate
     final isolateReceive = ReceivePort();
+
     final isolateId = switch (isolateName) {
       String name => name,
       _ => "isolate_with_argument:$arg",
@@ -31,7 +32,7 @@ class IsolateRunner {
       });
     }
 
-    // INFO: Listen to the isolate messages, SendPort for sending it its parameters
+    // INFO: Listen to the isolate messages, SendPort for sending isolate its parameters
     // and R for receiving the return value when the isolate has completed its work
     isolateReceive.listen((message) {
       switch (message) {
@@ -48,7 +49,7 @@ class IsolateRunner {
       }
     });
 
-    // INFO: resume the worker
+    // INFO: resume the worker, since it starts in a paused state
     if (isolate.pauseCapability case Capability pauseCapability) {
       isolate.resume(pauseCapability);
       if (isolateName case String isolateName) {
@@ -61,12 +62,12 @@ class IsolateRunner {
   }
 
   static void _spawnWorkerIsolate<T>(SendPort sendPort) {
-    // INFO: The port receiving messages from another isolate
+    // INFO: The port receiving messages from "outside"
     final receivePort = ReceivePort();
 
-    // INFO: We got a sendPort from the call to this function from another isolate
-    // Use it to let the other isolate know we're got a SendPort and are ready to
-    // listen for inputs.
+    // INFO: We got a sendPort from the call to this function
+    // we use this now to send this isolates receivers send port
+    // so that whoever spawned this isolate can send work data
     sendPort.send(receivePort.sendPort);
 
     // INFO: Define what properties we use in this isolate.
@@ -76,28 +77,23 @@ class IsolateRunner {
 
     // INFO: Start listening for a message sent over the recievePort. We expect an
     // argument of T and a function to run with this argument.
+    // we also want a bool to determin if we are to send any result back or not.
     receivePort.listen((message) {
       switch (message) {
         case Function wasFunction:
-          // print("got function");
           function = wasFunction;
         case T wasArguments:
-          // print("got arguments $wasArguments");
           arguments = wasArguments;
         case bool wasWithResult:
-          // print("sending results: $withResult");
           withResult = wasWithResult;
       }
 
-      // print("function: $function");
-      // print("arguments: $arguments");
-      // print("withResult: $withResult");
-
       // INFO: Match the defined properties to something real (and not null :P)
+      // when all match, we got what we need and can start the computation.
+      // by applying the function with its arguments. If without result we close
+      // the ReceivePort right away.
       switch ((function, arguments, withResult)) {
         case (Function function, T arguments, bool withResult):
-          // INFO: run the function with it's argument and send it back.. once done.. it could take a while :)
-          // print("all info aquired! function $arguments $withResult");
           if (!withResult) receivePort.close();
           final result = Function.apply(function, [arguments]);
           sendPort.send(result);
