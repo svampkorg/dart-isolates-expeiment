@@ -42,7 +42,7 @@ class IsolateRunner {
           toIsolateSendPort.send(arg);
           toIsolateSendPort.send(function);
         case R result:
-          // INFO: Send result back on the SendPort we got from upstream.
+          // INFO: Send result back on the SendPort we got from outside.
           isolateReceive.close();
           resultListenerSendPort.send({isolateId: result});
           futureCompleter.complete({isolateId: result});
