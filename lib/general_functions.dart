@@ -19,6 +19,7 @@ void progressPrint(int delay) {
     elapsed++;
     String toPrint = switch (elapsed) {
       int e when e % 60 == 0 => "[${(e / 60).round()} min]",
+      int e when e % 30 == 0 => "[${(e / 60).floor()}min 30s]",
       int e when e % 10 == 0 => "|",
       int e when e % 5 == 0 => ":",
       _ => ".",
