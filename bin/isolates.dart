@@ -12,8 +12,6 @@ void main() async {
   int fibb3 = 50;
   int fibb4 = 51;
   int fibb5 = 52;
-  int fibb6 = 53;
-  int fibb7 = 54;
 
   List<Future<Map<String, int>>> fibbFutures;
 
@@ -33,10 +31,6 @@ void main() async {
         isolateName: "fibonacci calculation for $fibb4:th number"),
     IsolateRunner.run<int, int>(fibonacci, fibb5, null, workerReceivePort.sendPort,
         isolateName: "fibonacci calculation for $fibb5:th number"),
-    // IsolateRunner.run<int, int>(fibonacci, fibb6, null, workerReceivePort.sendPort,
-    //     isolateName: "fibonacci calculation for $fibb6:th number"),
-    // IsolateRunner.run<int, int>(fibonacci, fibb7, null, workerReceivePort.sendPort,
-    //     isolateName: "fibonacci calculation for $fibb7:th number"),
   ];
 
   Map<String, int> resultMap = {};
