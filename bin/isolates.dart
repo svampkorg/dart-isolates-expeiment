@@ -52,7 +52,9 @@ void main() async {
         stdout.write("(r${resultMap.length})");
         if (resultMap.length >= fibbFutures.length) {
           print("\n\nResults are in!");
-          printResult(result);
+          printResult(resultMap);
+          // INFO: Send the killCommand to any isolates listening
+          // for such. (That would be the progressPrint :P)
           Function.apply(killCommand, [KillMessage(true)]);
         }
       });
