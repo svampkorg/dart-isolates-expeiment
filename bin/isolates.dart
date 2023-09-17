@@ -51,7 +51,6 @@ void main() async {
         stdin.first.then((value) => exit(0));
       },
       whenResult: (result, killCommand) {
-        // TODO: Match result type to expected type
         resultMap.addAll(result);
         stdout.write("(r${resultMap.length})");
         Function.apply(killCommand, [KillWhen(resultMap.length >= fibbFutures.length)]);
