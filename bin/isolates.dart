@@ -43,6 +43,8 @@ void main() async {
       bcStream: bcFromIsolates,
       whileListening: progressPrint,
       whenKilled: () {
+        print("\n\nResults are in!");
+        printResult(resultMap);
         print("Press any key to exit");
         stdin.first.then((value) => exit(0));
       },
@@ -50,12 +52,6 @@ void main() async {
         // TODO: Match result type to expected type
         resultMap.addAll(result);
         stdout.write("(r${resultMap.length})");
-        if (resultMap.length >= fibbFutures.length) {
-          print("\n\nResults are in!");
-          printResult(resultMap);
-          // INFO: Send the killCommand to any isolates listening
-          // for such. (That would be the progressPrint :P)
-          Function.apply(killCommand, [KillMessage(true)]);
-        }
+        Function.apply(killCommand, [KillMessage(resultMap.length >= fibbFutures.length)]);
       });
 }
