@@ -7,7 +7,7 @@ void printResult(Map<String, int> result) {
   });
 }
 
-// delay in milliseconds
+/// delay in milliseconds
 void progressPrint(int delay) {
   final cursorChars = ['-', '\\', '|', '/', '-', '\\', '|', '/'];
   var cursorIndex = 0;
