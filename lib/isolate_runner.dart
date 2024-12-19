@@ -22,7 +22,7 @@ class IsolateRunner {
 
     final isolate = await Isolate.spawn(_spawnWorkerIsolate<T>, isolateReceive.sendPort, paused: true, debugName: isolateName);
 
-    // INFO: listening for a kill signal from outide
+    // INFO: listening for a kill signal from outside
     if (killSignalStream case Stream bc) {
       bc.listen((message) {
         switch (message) {
@@ -75,7 +75,7 @@ class IsolateRunner {
     T? arguments;
     bool? withResult;
 
-    // INFO: Start listening for a message sent over the recievePort. We expect an
+    // INFO: Start listening for a message sent over the receivePort. We expect an
     // argument of T and a function to run with this argument.
     // we also want a bool to determin if we are to send any result back or not.
     receivePort.listen((message) {

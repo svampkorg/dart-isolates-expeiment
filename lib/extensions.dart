@@ -1,9 +1,10 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' as io;
 import 'dart:isolate';
 
 import 'package:isolates/isolate_runner.dart';
 import 'package:isolates/kill_message.dart';
+import 'package:mansion/mansion.dart';
 
 extension ReceivePortExtension on ReceivePort {
   listenFor<T>({
@@ -18,7 +19,10 @@ extension ReceivePortExtension on ReceivePort {
         case String s:
           print(s);
         case T value:
-          stdout.write("\b\b• ");
+          io.stdout.writeAnsi(SetStyles(Style.foreground(Color.brightGreen)));
+          // io.stdout.write("\b\b• ");
+          io.stdout.write("\b\b ");
+          io.stdout.writeAnsi(SetStyles.reset);
           whenResult?.call(value, killCommand);
         case KillWhen(:bool kill) when kill:
           close();
@@ -27,7 +31,7 @@ extension ReceivePortExtension on ReceivePort {
     });
     if (whileListening case Function whileListening) {
       IsolateRunner.run(whileListening, 50, bcStream, sendPort,
-          isolateName: "Time line dot-printer '•' for a completed result. '[#m]' minute and half, '¡' & '|' every 5th & 10th sec.",
+          isolateName: "\nTime line dot-printer '•' for a completed result. '[#m]' minute and half, '¡' & '|' every 5th & 10th sec.\n",
           withResult: false);
     }
   }

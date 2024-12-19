@@ -1,31 +1,57 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' as io;
+
+import 'package:mansion/mansion.dart';
 
 void printResult(Map<String, int> result) {
+  io.stdout.writeAnsi(SetStyles(Style.foreground(Color.red)));
   result.forEach((key, value) {
     print("$key: $value");
   });
+  io.stdout.writeAnsi(SetStyles.reset);
+}
+
+void printIntermediate(Map<String, int> result) {
+  io.stdout.writeAnsi(CursorPosition.save);
+  io.stdout.writeAnsi(CursorPosition.moveDown(result.length));
+  io.stdout.writeAnsi(CursorPosition.resetColumn);
+  io.stdout.writeAnsi(SetStyles(Style.foreground(Color.green)));
+  io.stdout.write("${result.keys.last}:");
+  io.stdout.writeAnsi(SetStyles(Style.foreground(Color.white)));
+  io.stdout.write(" ${result.values.last}");
+  io.stdout.writeAnsi(SetStyles.reset);
+  io.stdout.writeAnsi(CursorPosition.restore);
 }
 
 /// delay in milliseconds
 void progressPrint(int delay) {
-  final cursorChars = ['-', '\\', '|', '/', '-', '\\', '|', '/'];
+  // final cursorChars = ['-', '\\', '|', '/', '-', '\\', '|', '/'];
+  final cursorChars = ['󱑖', '󱑋', '󱑌', '󱑍', '󱑎', '󱑏', '󱑐', '󱑑', '󱑒', '󱑓', '󱑔', '󱑕'];
   var cursorIndex = 0;
   var elapsed = 0;
   final multiple = 1000 / delay;
-  stdout.write("[ ");
+  io.stdout.writeAnsi(SetStyles(Style.foreground(Color.blue)));
+  io.stdout.write("[ ");
+  io.stdout.writeAnsi(SetStyles.reset);
   while (true) {
-    sleep(Duration(milliseconds: delay));
+    io.sleep(Duration(milliseconds: delay));
     elapsed++;
-    String toPrint = switch (elapsed) {
-      int e when e % (60 * multiple) == 0 => "\b[${(e / (60 * multiple)).round()}m] ",
-      int e when e % (30 * multiple) == 0 => "\b[${switch ((e / (60 * multiple)).floor()) { int e when e >= 1 => e, _ => "" }}½m] ",
-      int e when e % (10 * multiple) == 0 => "\b| ",
-      int e when e % (5 * multiple) == 0 => "\b¡ ",
-      int e when e % (1 * multiple) == 0 => "\b. ",
-      _ => "\b${cursorChars[cursorIndex]}",
+    final ({String toPrint, Color color}) output = switch (elapsed) {
+      int e when e % (60 * multiple) == 0 => (toPrint: "\b[${(e / (60 * multiple)).round()}m] ", color: Color.brightYellow),
+      int e when e % (30 * multiple) == 0 => (
+          toPrint: "\b[${switch ((e / (60 * multiple)).floor()) { int e when e >= 1 => e, _ => "" }}½m] ",
+          color: Color.brightYellow
+        ),
+      int e when e % (10 * multiple) == 0 => (toPrint: "\b| ", color: Color.brightBlue),
+      int e when e % (5 * multiple) == 0 => (toPrint: "\b¡ ", color: Color.blue),
+      int e when e % (1 * multiple) == 0 => (toPrint: "\b. ", color: Color.yellow),
+      _ => (toPrint: "\b${cursorChars[cursorIndex]}", color: Color.brightMagenta),
     };
-    stdout.write(toPrint);
+    io.stdout.writeAnsi(SetStyles(Style.foreground(Color.blue)));
+    io.stdout.write("]\b");
+    io.stdout.writeAnsi(SetStyles(Style.foreground(output.color)));
+    io.stdout.write(output.toPrint);
+    io.stdout.writeAnsi(SetStyles.reset);
     cursorIndex = (cursorIndex + 1) % cursorChars.length;
   }
 }

@@ -1,10 +1,11 @@
-import 'dart:io';
+import 'dart:io' as io;
 import 'dart:isolate';
 
 import 'package:isolates/extensions.dart';
 import 'package:isolates/general_functions.dart';
 import 'package:isolates/isolate_runner.dart';
 import 'package:isolates/kill_message.dart';
+import 'package:mansion/mansion.dart';
 
 void main() async {
   int fibb1 = 47;
@@ -35,20 +36,27 @@ void main() async {
 
   Map<String, int> resultMap = {};
 
-  stdout.write('\x1b[?25l'); // Hide cursor
+  io.stdout.writeAnsi(Clear.all);
+  io.stdout.writeAnsi(CursorPosition.reset);
+  io.stdout.write('\x1b[?25l'); // Hide cursor
   workerReceivePort.listenFor<Map<String, int>>(
       bcStream: bcFromIsolates,
       whileListening: progressPrint,
       whenKilled: () {
-        stdout.write("\b] ");
-        print("\n\nResults are in!");
-        printResult(resultMap);
+        io.stdout.write("\b] ");
+        io.stdout.writeAnsi(SetStyles(Style.foreground(Color.green)));
+        io.stdout.writeAnsi(SetStyles.reset);
+        io.stdout.writeAnsi(CursorPosition.moveDown(resultMap.length + 1));
+        io.stdout.writeAnsi(CursorPosition.resetColumn);
+        print("That's it!");
+        // printResult(resultMap);
         print("Press any key to exit");
-        stdout.write('\x1b[?25h'); // Show cursor
-        stdin.first.then((value) => exit(0));
+        io.stdout.write('\x1b[?25h'); // Show cursor
+        io.stdin.first.then((value) => io.exit(0));
       },
-      whenResult: (result, killCommand) {
+      whenResult: (Map<String, int> result, Function killCommand) {
         resultMap.addAll(result);
+        printIntermediate(resultMap);
         Function.apply(killCommand, [KillWhen(resultMap.length >= fibbFutures.length)]);
       });
 }
