@@ -21,7 +21,7 @@ extension ReceivePortExtension on ReceivePort {
         case T value:
           io.stdout.writeAnsi(SetStyles(Style.foreground(Color.brightGreen)));
           // io.stdout.write("\b\b• ");
-          io.stdout.write("\b\b ");
+          io.stdout.write("\b\b󰇵 ");
           io.stdout.writeAnsi(SetStyles.reset);
           whenResult?.call(value, killCommand);
         case KillWhen(:bool kill) when kill:
